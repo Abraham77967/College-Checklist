@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Checklist Demo - Try It Out!</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1><i class="fas fa-graduation-cap"></i> College Checklist Demo</h1>
+            <p>Try out the features! This demo version works without Google Sign-In</p>
+            
+            <div style="background: #ecf0f1; padding: 12px 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #d5dbdb;">
+                <p style="margin: 0; font-size: 0.9rem; color: #7f8c8d;">
+                    <i class="fas fa-info-circle"></i> 
+                    This is a demo version. For full Firebase sync and Google Sign-In, see the main index.html file.
+                </p>
+            </div>
+        </header>
+
+        <!-- Add New Item Form -->
+        <div class="add-item-section">
+            <h3><i class="fas fa-plus-circle"></i> Add New Item</h3>
+            <form id="add-item-form" class="add-item-form">
+                <select id="category-select" required>
+                    <option value="">Select Category</option>
+                    <option value="bedding">🛏️ Bedding</option>
+                    <option value="clothing">👕 Clothing</option>
+                    <option value="electronics">💻 Electronics</option>
+                    <option value="room-essentials">🧺 Room / Other Essentials</option>
+                    <option value="bathroom-hygiene">🧼 Bathroom & Hygiene</option>
+                    <option value="study-supplies">📚 Study / School Supplies</option>
+                    <option value="documents-id">💳 Documents / ID</option>
+                    <option value="weather-comfort">🌧️ Weather / Comfort</option>
+                    <option value="kitchen-cleaning">🍽️ Kitchen / Cleaning</option>
+                </select>
+                <input type="text" id="item-name" placeholder="Item name" required>
+                <button type="submit" class="add-btn">Add Item</button>
+            </form>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="category-tabs">
+            <a href="#bedding" class="category-tab active" data-category="bedding">
+                <i class="fas fa-bed"></i> 🛏️ Bedding
+            </a>
+            <a href="#clothing" class="category-tab" data-category="clothing">
+                <i class="fas fa-tshirt"></i> 👕 Clothing
+            </a>
+            <a href="#electronics" class="category-tab" data-category="electronics">
+                <i class="fas fa-laptop"></i> 💻 Electronics
+            </a>
+            <a href="#room-essentials" class="category-tab" data-category="room-essentials">
+                <i class="fas fa-home"></i> 🧺 Room Essentials
+            </a>
+            <a href="#bathroom-hygiene" class="category-tab" data-category="bathroom-hygiene">
+                <i class="fas fa-shower"></i> 🧼 Bathroom & Hygiene
+            </a>
+            <a href="#study-supplies" class="category-tab" data-category="study-supplies">
+                <i class="fas fa-book"></i> 📚 Study Supplies
+            </a>
+            <a href="#documents-id" class="category-tab" data-category="documents-id">
+                <i class="fas fa-id-card"></i> 💳 Documents & ID
+            </a>
+            <a href="#weather-comfort" class="category-tab" data-category="weather-comfort">
+                <i class="fas fa-cloud-rain"></i> 🌧️ Weather & Comfort
+            </a>
+            <a href="#kitchen-cleaning" class="category-tab" data-category="kitchen-cleaning">
+                <i class="fas fa-utensils"></i> 🍽️ Kitchen & Cleaning
+            </a>
+        </div>
+
+        <!-- Sample Checklist Categories -->
+        <div class="checklist-container">
+            <!-- Bedding -->
+            <div class="category-section active" data-category="bedding">
+                <h2><i class="fas fa-bed"></i> 🛏️ Bedding</h2>
+                <div class="items-list" id="bedding-items">
+                    <div class="item" data-id="bedding-1">
+                        <input type="checkbox" id="bedding-1" onchange="toggleItem(this)">
+                        <label for="bedding-1">Pillow</label>
+                        <div class="item-actions">
+                            <button onclick="editItem(this)" class="edit-btn"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem(this)" class="delete-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="item" data-id="bedding-2">
+                        <input type="checkbox" id="bedding-2" onchange="toggleItem(this)">
+                        <label for="bedding-2">Twin XL sheet set</label>
+                        <div class="item-actions">
+                            <button onclick="editItem(this)" class="edit-btn"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem(this)" class="delete-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clothing -->
+            <div class="category-section" data-category="clothing">
+                <h2><i class="fas fa-tshirt"></i> 👕 Clothing</h2>
+                <div class="items-list" id="clothing-items">
+                    <div class="item" data-id="clothing-1">
+                        <input type="checkbox" id="clothing-1" onchange="toggleItem(this)">
+                        <label for="clothing-1">Everyday wear</label>
+                        <div class="item-actions">
+                            <button onclick="editItem(this)" class="edit-btn"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem(this)" class="delete-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="item" data-id="clothing-2">
+                        <input type="checkbox" id="clothing-2" onchange="toggleItem(this)">
+                        <label for="clothing-2">Cold-weather wear</label>
+                        <div class="item-actions">
+                            <button onclick="editItem(this)" class="edit-btn"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem(this)" class="delete-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Electronics -->
+            <div class="category-section" data-category="electronics">
+                <h2><i class="fas fa-laptop"></i> 💻 Electronics</h2>
+                <div class="items-list" id="electronics-items">
+                    <div class="item" data-id="electronics-1">
+                        <input type="checkbox" id="electronics-1" onchange="toggleItem(this)">
+                        <label for="electronics-1">MacBook & Windows laptop</label>
+                        <div class="item-actions">
+                            <button onclick="editItem(this)" class="edit-btn"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem(this)" class="delete-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="item" data-id="electronics-2">
+                        <input type="checkbox" id="electronics-2" onchange="toggleItem(this)">
+                        <label for="electronics-2">Charging cables</label>
+                        <div class="item-actions">
+                            <button onclick="editItem(this)" class="edit-btn"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem(this)" class="delete-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room Essentials -->
+            <div class="category-section" data-category="room-essentials">
+                <h2><i class="fas fa-home"></i> 🧺 Room Essentials</h2>
+                <div class="items-list" id="room-essentials-items">
+                    <div class="item" data-id="room-essentials-1">
+                        <input type="checkbox" id="room-essentials-1" onchange="toggleItem(this)">
+                        <label for="room-essentials-1">Mini fridge</label>
+                        <div class="item-actions">
+                            <button onclick="editItem(this)" class="edit-btn"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem(this)" class="delete-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bathroom & Hygiene -->
+            <div class="category-section" data-category="bathroom-hygiene">
+                <h2><i class="fas fa-shower"></i> 🧼 Bathroom & Hygiene</h2>
+                <div class="items-list" id="bathroom-hygiene-items">
+                    <div class="item" data-id="bathroom-hygiene-1">
+                        <input type="checkbox" id="bathroom-hygiene-1" onchange="toggleItem(this)">
+                        <label for="bathroom-hygiene-1">Towels</label>
+                        <div class="item-actions">
+                            <button onclick="editItem(this)" class="edit-btn"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem(this)" class="delete-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Study Supplies -->
+            <div class="category-section" data-category="study-supplies">
+                <h2><i class="fas fa-book"></i> 📚 Study Supplies</h2>
+                <div class="items-list" id="study-supplies-items">
+                    <div class="item" data-id="study-supplies-1">
+                        <input type="checkbox" id="study-supplies-1" onchange="toggleItem(this)">
+                        <label for="study-supplies-1">Notebooks, folders, binders</label>
+                        <div class="item-actions">
+                            <button onclick="editItem(this)" class="edit-btn"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem(this)" class="delete-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents & ID -->
+            <div class="category-section" data-category="documents-id">
+                <h2><i class="fas fa-id-card"></i> 💳 Documents & ID</h2>
+                <div class="items-list" id="documents-id-items">
+                    <div class="item" data-id="documents-id-1">
+                        <input type="checkbox" id="documents-id-1" onchange="toggleItem(this)">
+                        <label for="documents-id-1">Student ID</label>
+                        <div class="item-actions">
+                            <button onclick="editItem(this)" class="edit-btn"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem(this)" class="delete-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather & Comfort -->
+            <div class="category-section" data-category="weather-comfort">
+                <h2><i class="fas fa-cloud-rain"></i> 🌧️ Weather & Comfort</h2>
+                <div class="items-list" id="weather-comfort-items">
+                    <div class="item" data-id="weather-comfort-1">
+                        <input type="checkbox" id="weather-comfort-1" onchange="toggleItem(this)">
+                        <label for="weather-comfort-1">Umbrella</label>
+                        <div class="item-actions">
+                            <button onclick="editItem(this)" class="edit-btn"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem(this)" class="delete-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kitchen & Cleaning -->
+            <div class="category-section" data-category="kitchen-cleaning">
+                <h2><i class="fas fa-utensils"></i> 🍽️ Kitchen & Cleaning</h2>
+                <div class="items-list" id="kitchen-cleaning-items">
+                    <div class="item" data-id="kitchen-cleaning-1">
+                        <input type="checkbox" id="kitchen-cleaning-1" onchange="toggleItem(this)">
+                        <label for="kitchen-cleaning-1">Dish soap</label>
+                        <div class="item-actions">
+                            <button onclick="editItem(this)" class="edit-btn"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem(this)" class="delete-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Summary -->
+        <div class="progress-summary">
+            <h3>Progress Summary</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <p id="progress-text">0 of 0 items completed</p>
+        </div>
+
+        <!-- Demo Instructions -->
+        <div class="add-item-section" style="margin-top: 40px;">
+            <h3><i class="fas fa-lightbulb"></i> Try These Features:</h3>
+            <div style="text-align: left; max-width: 600px; margin: 0 auto;">
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 8px; border: 1px solid #ecf0f1;">
+                        <i class="fas fa-tabs" style="color: #3498db; margin-right: 10px;"></i>
+                        <strong>Category Tabs:</strong> Click the tabs above to jump between different categories
+                    </li>
+                    <li style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 8px; border: 1px solid #ecf0f1;">
+                        <i class="fas fa-check-circle" style="color: #3498db; margin-right: 10px;"></i>
+                        <strong>Check off items:</strong> Click the checkboxes to see completed items move to the top
+                    </li>
+                    <li style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 8px; border: 1px solid #ecf0f1;">
+                        <i class="fas fa-edit" style="color: #3498db; margin-right: 10px;"></i>
+                        <strong>Edit items:</strong> Hover over items and click the edit button to change names
+                    </li>
+                    <li style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 8px; border: 1px solid #ecf0f1;">
+                        <i class="fas fa-plus" style="color: #3498db; margin-right: 10px;"></i>
+                        <strong>Add new items:</strong> Use the form above to add items to any category
+                    </li>
+                    <li style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 8px; border: 1px solid #ecf0f1;">
+                        <i class="fas fa-trash" style="color: #3498db; margin-right: 10px;"></i>
+                        <strong>Delete items:</strong> Hover over items and click the delete button to remove them
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Edit Item</h3>
+            <form id="edit-form">
+                <input type="text" id="edit-item-name" required>
+                <div class="modal-buttons">
+                    <button type="submit" class="save-btn">Save</button>
+                    <button type="button" class="cancel-btn" onclick="closeEditModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
