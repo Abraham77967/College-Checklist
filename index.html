@@ -42,13 +42,6 @@
             console.log('Firebase object:', window.firebase);
             console.log('Firebase SDK version check...');
             
-            // Check if Firebase SDK is fully loaded
-            if (typeof initializeApp === 'undefined') {
-                console.error('Firebase SDK not loaded yet');
-                setTimeout(() => window.location.reload(), 2000);
-                return;
-            }
-            
             // Small delay to ensure Firebase is fully initialized
             setTimeout(() => {
                 if (window.firebase && window.firebase.auth) {
@@ -70,13 +63,10 @@
                         console.error('Redirect result error:', error);
                     });
                     
-                    initializeApp();
+                    // Don't call initializeApp here - it will be called from script.js
                 } else {
                     console.error('Firebase failed to load');
                     console.log('Firebase object:', window.firebase);
-                    if (typeof showNotification === 'function') {
-                        showNotification('Firebase failed to load. Please refresh the page.', 'error');
-                    }
                 }
             }, 100);
         });
@@ -106,15 +96,15 @@
             <form id="add-item-form" class="add-item-form">
                 <select id="category-select" required>
                     <option value="">Select Category</option>
-                    <option value="bedding">🛏️ Bedding</option>
-                    <option value="clothing">👕 Clothing</option>
-                    <option value="electronics">💻 Electronics</option>
-                    <option value="room-essentials">🧺 Room / Other Essentials</option>
-                    <option value="bathroom-hygiene">🧼 Bathroom & Hygiene</option>
-                    <option value="study-supplies">📚 Study / School Supplies</option>
-                    <option value="documents-id">💳 Documents / ID</option>
-                    <option value="weather-comfort">🌧️ Weather / Comfort</option>
-                    <option value="kitchen-cleaning">🍽️ Kitchen / Cleaning</option>
+                    <option value="bedding"><span class="emoji">🛏️</span> Bedding</option>
+                    <option value="clothing"><span class="emoji">👕</span> Clothing</option>
+                    <option value="electronics"><span class="emoji">💻</span> Electronics</option>
+                    <option value="room-essentials"><span class="emoji">🧺</span> Room / Other Essentials</option>
+                    <option value="bathroom-hygiene"><span class="emoji">🧼</span> Bathroom & Hygiene</option>
+                    <option value="study-supplies"><span class="emoji">📚</span> Study / School Supplies</option>
+                    <option value="documents-id"><span class="emoji">💳</span> Documents / ID</option>
+                    <option value="weather-comfort"><span class="emoji">🌧️</span> Weather / Comfort</option>
+                    <option value="kitchen-cleaning"><span class="emoji">🍽️</span> Kitchen / Cleaning</option>
                 </select>
                 <input type="text" id="item-name" placeholder="Item name" required>
                 <button type="submit" class="add-btn">Add Item</button>
@@ -123,40 +113,40 @@
 
         <!-- Category Tabs -->
         <div class="category-tabs">
-            <a href="#bedding" class="category-tab active" data-category="bedding">
-                <i class="fas fa-bed"></i> 🛏️ Bedding
+            <a href="#bedding" class="category-tab" data-category="bedding">
+                <i class="fas fa-bed"></i> <span class="emoji">🛏️</span> Bedding
             </a>
             <a href="#clothing" class="category-tab" data-category="clothing">
-                <i class="fas fa-tshirt"></i> 👕 Clothing
+                <i class="fas fa-tshirt"></i> <span class="emoji">👕</span> Clothing
             </a>
             <a href="#electronics" class="category-tab" data-category="electronics">
-                <i class="fas fa-laptop"></i> 💻 Electronics
+                <i class="fas fa-laptop"></i> <span class="emoji">💻</span> Electronics
             </a>
             <a href="#room-essentials" class="category-tab" data-category="room-essentials">
-                <i class="fas fa-home"></i> 🧺 Room Essentials
+                <i class="fas fa-home"></i> <span class="emoji">🧺</span> Room Essentials
             </a>
             <a href="#bathroom-hygiene" class="category-tab" data-category="bathroom-hygiene">
-                <i class="fas fa-shower"></i> 🧼 Bathroom & Hygiene
+                <i class="fas fa-shower"></i> <span class="emoji">🧼</span> Bathroom & Hygiene
             </a>
             <a href="#study-supplies" class="category-tab" data-category="study-supplies">
-                <i class="fas fa-book"></i> 📚 Study Supplies
+                <i class="fas fa-book"></i> <span class="emoji">📚</span> Study Supplies
             </a>
             <a href="#documents-id" class="category-tab" data-category="documents-id">
-                <i class="fas fa-id-card"></i> 💳 Documents & ID
+                <i class="fas fa-id-card"></i> <span class="emoji">💳</span> Documents & ID
             </a>
             <a href="#weather-comfort" class="category-tab" data-category="weather-comfort">
-                <i class="fas fa-cloud-rain"></i> 🌧️ Weather & Comfort
+                <i class="fas fa-cloud-rain"></i> <span class="emoji">🌧️</span> Weather & Comfort
             </a>
             <a href="#kitchen-cleaning" class="category-tab" data-category="kitchen-cleaning">
-                <i class="fas fa-utensils"></i> 🍽️ Kitchen & Cleaning
+                <i class="fas fa-utensils"></i> <span class="emoji">🍽️</span> Kitchen & Cleaning
             </a>
         </div>
 
         <!-- Checklist Categories -->
         <div class="checklist-container">
             <!-- Bedding -->
-            <div class="category-section active" data-category="bedding">
-                <h2><i class="fas fa-bed"></i> 🛏️ Bedding</h2>
+            <div class="category-section" data-category="bedding">
+                <h2><i class="fas fa-bed"></i> <span class="emoji">🛏️</span> Bedding</h2>
                 <div class="items-list" id="bedding-items">
                     <div class="item" data-id="bedding-1">
                         <input type="checkbox" id="bedding-1" onchange="toggleItem(this)">
@@ -195,7 +185,7 @@
 
             <!-- Clothing -->
             <div class="category-section" data-category="clothing">
-                <h2><i class="fas fa-tshirt"></i> 👕 Clothing</h2>
+                <h2><i class="fas fa-tshirt"></i> <span class="emoji">👕</span> Clothing</h2>
                 <div class="items-list" id="clothing-items">
                     <div class="item" data-id="clothing-1">
                         <input type="checkbox" id="clothing-1" onchange="toggleItem(this)">
@@ -266,7 +256,7 @@
 
             <!-- Electronics -->
             <div class="category-section" data-category="electronics">
-                <h2><i class="fas fa-laptop"></i> 💻 Electronics</h2>
+                <h2><i class="fas fa-laptop"></i> <span class="emoji">💻</span> Electronics</h2>
                 <div class="items-list" id="electronics-items">
                     <div class="item" data-id="electronics-1">
                         <input type="checkbox" id="electronics-1" onchange="toggleItem(this)">
@@ -385,7 +375,7 @@
 
             <!-- Room Essentials -->
             <div class="category-section" data-category="room-essentials">
-                <h2><i class="fas fa-home"></i> 🧺 Room / Other Essentials</h2>
+                <h2><i class="fas fa-home"></i> <span class="emoji">🧺</span> Room / Other Essentials</h2>
                 <div class="items-list" id="room-essentials-items">
                     <div class="item" data-id="room-essentials-1">
                         <input type="checkbox" id="room-essentials-1" onchange="toggleItem(this)">
@@ -456,7 +446,7 @@
 
             <!-- Bathroom & Hygiene -->
             <div class="category-section" data-category="bathroom-hygiene">
-                <h2><i class="fas fa-shower"></i> 🧼 Bathroom & Hygiene</h2>
+                <h2><i class="fas fa-shower"></i> <span class="emoji">🧼</span> Bathroom & Hygiene</h2>
                 <div class="items-list" id="bathroom-hygiene-items">
                     <div class="item" data-id="bathroom-hygiene-1">
                         <input type="checkbox" id="bathroom-hygiene-1" onchange="toggleItem(this)">
@@ -567,7 +557,7 @@
 
             <!-- Study Supplies -->
             <div class="category-section" data-category="study-supplies">
-                <h2><i class="fas fa-book"></i> 📚 Study / School Supplies</h2>
+                <h2><i class="fas fa-book"></i> <span class="emoji">📚</span> Study / School Supplies</h2>
                 <div class="items-list" id="study-supplies-items">
                     <div class="item" data-id="study-supplies-1">
                         <input type="checkbox" id="study-supplies-1" onchange="toggleItem(this)">
@@ -614,7 +604,7 @@
 
             <!-- Documents & ID -->
             <div class="category-section" data-category="documents-id">
-                <h2><i class="fas fa-id-card"></i> 💳 Documents / ID</h2>
+                <h2><i class="fas fa-id-card"></i> <span class="emoji">💳</span> Documents / ID</h2>
                 <div class="items-list" id="documents-id-items">
                     <div class="item" data-id="documents-id-1">
                         <input type="checkbox" id="documents-id-1" onchange="toggleItem(this)">
@@ -645,7 +635,7 @@
 
             <!-- Weather & Comfort -->
             <div class="category-section" data-category="weather-comfort">
-                <h2><i class="fas fa-cloud-rain"></i> 🌧️ Weather / Comfort</h2>
+                <h2><i class="fas fa-cloud-rain"></i> <span class="emoji">🌧️</span> Weather / Comfort</h2>
                 <div class="items-list" id="weather-comfort-items">
                     <div class="item" data-id="weather-comfort-1">
                         <input type="checkbox" id="weather-comfort-1" onchange="toggleItem(this)">
@@ -660,7 +650,7 @@
 
             <!-- Kitchen & Cleaning -->
             <div class="category-section" data-category="kitchen-cleaning">
-                <h2><i class="fas fa-utensils"></i> 🍽️ Kitchen / Cleaning</h2>
+                <h2><i class="fas fa-utensils"></i> <span class="emoji">🍽️</span> Kitchen / Cleaning</h2>
                 <div class="items-list" id="kitchen-cleaning-items">
                     <div class="item" data-id="kitchen-cleaning-1">
                         <input type="checkbox" id="kitchen-cleaning-1" onchange="toggleItem(this)">

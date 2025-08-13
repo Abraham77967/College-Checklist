@@ -2,12 +2,16 @@
 let currentUser = null;
 let currentEditItem = null;
 let itemCounter = 1;
+let touchStartX = 0;
+let touchStartY = 0;
+let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 // Initialize the application
 function initializeApp() {
     loadChecklistFromStorage();
     updateProgress();
     setupTabNavigation();
+    setupMobileFeatures();
     
     // Set up form submission
     document.getElementById('add-item-form').addEventListener('submit', addNewItem);
@@ -71,6 +75,25 @@ function setupTabNavigation() {
     const tabs = document.querySelectorAll('.category-tab');
     const sections = document.querySelectorAll('.category-section');
     
+    // Remove all active classes initially
+    tabs.forEach(tab => tab.classList.remove('active'));
+    sections.forEach(section => section.classList.remove('active'));
+    
+    // Check if there's a hash in the URL to set initial active state
+    const hash = window.location.hash.substring(1);
+    let initialCategory = 'bedding'; // default
+    
+    if (hash && document.querySelector(`[data-category="${hash}"]`)) {
+        initialCategory = hash;
+    }
+    
+    // Set initial active state
+    const initialTab = document.querySelector(`[data-category="${initialCategory}"]`);
+    const initialSection = document.querySelector(`.category-section[data-category="${initialCategory}"]`);
+    
+    if (initialTab) initialTab.classList.add('active');
+    if (initialSection) initialSection.classList.add('active');
+    
     tabs.forEach(tab => {
         tab.addEventListener('click', function(e) {
             e.preventDefault();
@@ -96,9 +119,9 @@ function setupTabNavigation() {
     });
     
     // Handle initial hash or default to bedding
-    const hash = window.location.hash.slice(1);
-    if (hash && document.querySelector(`[data-category="${hash}"]`)) {
-        showCategory(hash);
+    const initialHash = window.location.hash.slice(1);
+    if (initialHash && document.querySelector(`[data-category="${initialHash}"]`)) {
+        showCategory(initialHash);
     } else {
         showCategory('bedding');
     }
@@ -589,6 +612,38 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
+// Enhanced mobile-friendly notification system
+function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
+    
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    
+    // Mobile-specific positioning
+    if (isMobile) {
+        notification.style.position = 'fixed';
+        notification.style.top = '20px';
+        notification.style.left = '10px';
+        notification.style.right = '10px';
+        notification.style.zIndex = '10000';
+        notification.style.borderRadius = '8px';
+        notification.style.fontSize = '14px';
+        notification.style.fontWeight = '500';
+    }
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 3 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 3000);
+}
+
 // Keyboard shortcuts
 document.addEventListener('keydown', function(event) {
     // Escape key to close modal
@@ -661,8 +716,11 @@ function importChecklist() {
     input.click();
 }
 
-// Add export/import buttons to the header
+// Add export/import buttons to the header and initialize the app
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize the app first
+    initializeApp();
+    
     const header = document.querySelector('.header');
     
     const exportBtn = document.createElement('button');
@@ -714,5 +772,201 @@ document.addEventListener('DOMContentLoaded', function() {
     header.appendChild(exportBtn);
     header.appendChild(importBtn);
 });
+
+// Mobile-specific features setup
+function setupMobileFeatures() {
+    if (!isMobile) return;
+    
+    // Add touch feedback to buttons
+    addTouchFeedback();
+    
+    // Setup swipe gestures for category tabs
+    setupSwipeGestures();
+    
+    // Improve mobile scrolling
+    improveMobileScrolling();
+    
+    // Add mobile-specific event listeners
+    addMobileEventListeners();
+    
+    // Optimize for mobile performance
+    optimizeForMobile();
+}
+
+// Add touch feedback to interactive elements
+function addTouchFeedback() {
+    const touchElements = document.querySelectorAll('.google-signin-btn, .add-btn, .edit-btn, .delete-btn, .save-btn, .cancel-btn, .category-tab');
+    
+    touchElements.forEach(element => {
+        element.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.95)';
+            this.style.opacity = '0.8';
+        });
+        
+        element.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+            this.style.opacity = '1';
+        });
+        
+        element.addEventListener('touchcancel', function() {
+            this.style.transform = 'scale(1)';
+            this.style.opacity = '1';
+        });
+    });
+}
+
+// Setup swipe gestures for category tabs
+function setupSwipeGestures() {
+    const categoryTabs = document.querySelector('.category-tabs');
+    if (!categoryTabs) return;
+    
+    categoryTabs.addEventListener('touchstart', handleTouchStart, false);
+    categoryTabs.addEventListener('touchmove', handleTouchMove, false);
+    categoryTabs.addEventListener('touchend', handleTouchEnd, false);
+}
+
+// Touch event handlers for swipe gestures
+function handleTouchStart(event) {
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
+}
+
+function handleTouchMove(event) {
+    if (!touchStartX || !touchStartY) return;
+    
+    const touchEndX = event.touches[0].clientX;
+    const touchEndY = event.touches[0].clientY;
+    
+    const diffX = touchStartX - touchEndX;
+    const diffY = touchStartY - touchEndY;
+    
+    // Only handle horizontal swipes
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+        event.preventDefault();
+    }
+}
+
+function handleTouchEnd(event) {
+    if (!touchStartX || !touchStartY) return;
+    
+    const touchEndX = event.changedTouches[0].clientX;
+    const touchEndY = event.changedTouches[0].clientY;
+    
+    const diffX = touchStartX - touchEndX;
+    const diffY = touchStartY - touchEndY;
+    
+    // Horizontal swipe threshold
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 100) {
+        if (diffX > 0) {
+            // Swipe left - next category
+            navigateToNextCategory();
+        } else {
+            // Swipe right - previous category
+            navigateToPreviousCategory();
+        }
+    }
+    
+    touchStartX = 0;
+    touchStartY = 0;
+}
+
+// Navigate to next category
+function navigateToNextCategory() {
+    const activeTab = document.querySelector('.category-tab.active');
+    const nextTab = activeTab.nextElementSibling;
+    
+    if (nextTab && nextTab.classList.contains('category-tab')) {
+        nextTab.click();
+    }
+}
+
+// Navigate to previous category
+function navigateToPreviousCategory() {
+    const activeTab = document.querySelector('.category-tab.active');
+    const prevTab = activeTab.previousElementSibling;
+    
+    if (prevTab && prevTab.classList.contains('category-tab')) {
+        prevTab.click();
+    }
+}
+
+// Improve mobile scrolling performance
+function improveMobileScrolling() {
+    // Add momentum scrolling for iOS
+    const scrollableElements = document.querySelectorAll('.category-tabs, .items-list');
+    scrollableElements.forEach(element => {
+        element.style.webkitOverflowScrolling = 'touch';
+    });
+    
+    // Optimize scroll performance
+    let ticking = false;
+    function updateScroll() {
+        ticking = false;
+    }
+    
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(updateScroll);
+            ticking = true;
+        }
+    }
+    
+    scrollableElements.forEach(element => {
+        element.addEventListener('scroll', requestTick, { passive: true });
+    });
+}
+
+// Add mobile-specific event listeners
+function addMobileEventListeners() {
+    // Prevent zoom on double tap for form inputs
+    const formInputs = document.querySelectorAll('input, select, textarea');
+    formInputs.forEach(input => {
+        input.addEventListener('touchend', function(e) {
+            // Prevent double-tap zoom on iOS
+            e.preventDefault();
+            this.focus();
+        });
+    });
+    
+    // Add haptic feedback for mobile devices
+    if ('vibrate' in navigator) {
+        const interactiveElements = document.querySelectorAll('.item-checkbox, .edit-btn, .delete-btn');
+        interactiveElements.forEach(element => {
+            element.addEventListener('click', function() {
+                navigator.vibrate(10);
+            });
+        });
+    }
+    
+    // Handle orientation change
+    window.addEventListener('orientationchange', function() {
+        setTimeout(() => {
+            // Refresh layout after orientation change
+            window.scrollTo(0, 0);
+            updateProgress();
+        }, 100);
+    });
+}
+
+// Optimize for mobile performance
+function optimizeForMobile() {
+    // Reduce animations on low-end devices
+    if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
+        document.body.style.setProperty('--transition-duration', '0.1s');
+    }
+    
+    // Optimize images and icons for mobile
+    const icons = document.querySelectorAll('.fas, .fab');
+    icons.forEach(icon => {
+        icon.style.willChange = 'transform';
+    });
+    
+    // Add passive event listeners for better scroll performance
+    const passiveElements = document.querySelectorAll('.category-tabs, .items-list');
+    passiveElements.forEach(element => {
+        element.addEventListener('touchstart', function() {}, { passive: true });
+        element.addEventListener('touchmove', function() {}, { passive: true });
+    });
+}
 
  

@@ -1,0 +1,14 @@
+{
+  "name": "college-checklist",
+  "version": "1.0.0",
+  "description": "A college packing checklist app with Firebase integration",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["checklist", "college", "firebase", "packing"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {}
+} 
